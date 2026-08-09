@@ -4,7 +4,7 @@
   <div class="card chart-card">
     <h3>Entradas x Saídas</h3>
     <div class="chart-wrap">
-      <canvas #doughnutCanvas></canvas>
+      <canvas #doughnutCanvas role="img" aria-label="Gráfico de donut mostrando entradas e saídas"></canvas>
     </div>
     <div class="legend-summary">
       <div><span class="dot dot-success"></span> Entradas: {{ movimentacaoService.totalEntradas() | currency:'BRL' }}</div>
@@ -15,14 +15,14 @@
   <div class="card chart-card">
     <h3>Evolução do Saldo</h3>
     <div class="chart-wrap">
-      <canvas #lineCanvas></canvas>
+      <canvas #lineCanvas role="img" aria-label="Gráfico de linha mostrando a evolução do saldo"></canvas>
     </div>
   </div>
 
   <div class="card chart-card">
     <h3>Gastos por Categoria</h3>
     <div class="chart-wrap">
-      <canvas #barCanvas></canvas>
+      <canvas #barCanvas role="img" aria-label="Gráfico de barras mostrando os gastos por categoria"></canvas>
     </div>
   </div>
 </div>
@@ -39,11 +39,11 @@
     <table>
       <thead>
         <tr>
-          <th>Data</th>
-          <th>Tipo</th>
-          <th>Categoria</th>
-          <th>Descrição</th>
-          <th class="valor-col">Valor</th>
+          <th scope="col">Data</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Descrição</th>
+          <th class="valor-col" scope="col">Valor</th>
         </tr>
       </thead>
       <tbody>
