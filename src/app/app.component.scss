@@ -38,7 +38,9 @@
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 
   &:hover {
     background: var(--color-bg);
@@ -74,11 +76,30 @@
 }
 
 .user-chip {
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 12px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chevron {
+  color: #6b7280;
 }
 
 .page {
@@ -90,6 +111,10 @@
 }
 
 @media (max-width: 720px) {
-  .sidebar { display: none; }
-  .page { padding: 16px; }
+  .sidebar {
+    display: none;
+  }
+  .page {
+    padding: 16px;
+  }
 }

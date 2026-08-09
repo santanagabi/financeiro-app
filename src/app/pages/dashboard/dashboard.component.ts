@@ -51,7 +51,7 @@ export class DashboardComponent implements AfterViewInit {
     const entradas = this.movimentacaoService.totalEntradas();
     const saidas = this.movimentacaoService.totalSaidas();
 
-    const config: ChartConfiguration = {
+    const config: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
         labels: ['Entradas', 'Saídas'],
@@ -85,7 +85,7 @@ export class DashboardComponent implements AfterViewInit {
       return { data: m.data, saldo: acumulado };
     });
 
-    const config: ChartConfiguration = {
+    const config: ChartConfiguration<'line'> = {
       type: 'line',
       data: {
         labels: pontos.map((p) => this.formatarDataCurta(p.data)),
@@ -123,7 +123,7 @@ export class DashboardComponent implements AfterViewInit {
 
     const entradas = [...porCategoria.entries()].sort((a, b) => b[1] - a[1]);
 
-    const config: ChartConfiguration = {
+    const config: ChartConfiguration<'bar'> = {
       type: 'bar',
       data: {
         labels: entradas.map(([cat]) => cat),
