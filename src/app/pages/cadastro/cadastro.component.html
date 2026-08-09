@@ -1,0 +1,81 @@
+<div class="card form-card">
+  <h2>Cadastro de Movimentações Bancárias</h2>
+
+  <!-- [formGroup] conecta o <form> ao objeto `form` criado no .ts -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid">
+
+    <div class="field">
+      <label for="data">Data da movimentação *</label>
+      <input id="data" type="date" formControlName="data" />
+      <!-- @if é o novo control-flow do Angular, equivalente ao v-if -->
+      @if (f.data.invalid && f.data.touched) {
+        <small class="error">Informe uma data válida.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Tipo *</label>
+      <div class="radio-group">
+        <label class="radio">
+          <input type="radio" formControlName="tipo" value="Entrada" /> Entrada
+        </label>
+        <label class="radio">
+          <input type="radio" formControlName="tipo" value="Saida" /> Saída
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="categoria">Categoria *</label>
+      <select id="categoria" formControlName="categoria">
+        <option value="" disabled>Selecione...</option>
+        <!-- @for é o novo control-flow, equivalente ao v-for. "track" é obrigatório -->
+        @for (cat of categorias; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+      @if (f.categoria.invalid && f.categoria.touched) {
+        <small class="error">Selecione uma categoria.</small>
+      }
+    </div>
+
+    <div class="field full">
+      <label for="descricao">Descrição *</label>
+      <input
+        id="descricao"
+        type="text"
+        formControlName="descricao"
+        placeholder="Informe a descrição da movimentação"
+      />
+      @if (f.descricao.invalid && f.descricao.touched) {
+        <small class="error">A descrição deve ter entre 5 e 100 caracteres.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="valor">Valor *</label>
+      <div class="input-money">
+        <span>R$</span>
+        <input id="valor" type="number" step="0.01" min="0" formControlName="valor" placeholder="0,00" />
+      </div>
+      @if (f.valor.invalid && f.valor.touched) {
+        <small class="error">Informe um valor maior que zero.</small>
+      }
+    </div>
+
+    <div class="actions full">
+      <button type="submit" class="btn-primary" [disabled]="salvando()">
+        💾 {{ salvando() ? 'Salvando...' : 'Salvar movimentação' }}
+      </button>
+      <button type="button" class="btn-secondary" (click)="limpar()">
+        🧹 Limpar
+      </button>
+    </div>
+
+    @if (mensagem(); as msg) {
+      <div class="full alert" [class.alert-success]="msg.tipo === 'sucesso'" [class.alert-error]="msg.tipo === 'erro'">
+        {{ msg.texto }}
+      </div>
+    }
+  </form>
+</div>

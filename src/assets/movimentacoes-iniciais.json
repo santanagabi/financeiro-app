@@ -1,0 +1,42 @@
+[
+  {
+    "id": "seed-1",
+    "data": "2024-05-31",
+    "tipo": "Entrada",
+    "categoria": "Salário",
+    "descricao": "Salário mensal",
+    "valor": 4500
+  },
+  {
+    "id": "seed-2",
+    "data": "2024-05-30",
+    "tipo": "Saida",
+    "categoria": "Boleto",
+    "descricao": "Aluguel",
+    "valor": 1600
+  },
+  {
+    "id": "seed-3",
+    "data": "2024-05-29",
+    "tipo": "Saida",
+    "categoria": "Cartão",
+    "descricao": "Supermercado",
+    "valor": 350
+  },
+  {
+    "id": "seed-4",
+    "data": "2024-05-28",
+    "tipo": "Saida",
+    "categoria": "PIX",
+    "descricao": "Combustível",
+    "valor": 120
+  },
+  {
+    "id": "seed-5",
+    "data": "2024-05-27",
+    "tipo": "Entrada",
+    "categoria": "Outros",
+    "descricao": "Projeto de design freelance",
+    "valor": 1200
+  }
+]

@@ -1,0 +1,72 @@
+<h2 class="page-title">Dashboard de Movimentações</h2>
+
+<div class="charts-row">
+  <div class="card chart-card">
+    <h3>Entradas x Saídas</h3>
+    <div class="chart-wrap">
+      <canvas #doughnutCanvas></canvas>
+    </div>
+    <div class="legend-summary">
+      <div><span class="dot dot-success"></span> Entradas: {{ movimentacaoService.totalEntradas() | currency:'BRL' }}</div>
+      <div><span class="dot dot-danger"></span> Saídas: {{ movimentacaoService.totalSaidas() | currency:'BRL' }}</div>
+    </div>
+  </div>
+
+  <div class="card chart-card">
+    <h3>Evolução do Saldo</h3>
+    <div class="chart-wrap">
+      <canvas #lineCanvas></canvas>
+    </div>
+  </div>
+
+  <div class="card chart-card">
+    <h3>Gastos por Categoria</h3>
+    <div class="chart-wrap">
+      <canvas #barCanvas></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card table-card">
+  <div class="table-header">
+    <h3>Extrato</h3>
+    <span class="saldo" [class.negativo]="movimentacaoService.saldoAtual() < 0">
+      Saldo atual: {{ movimentacaoService.saldoAtual() | currency:'BRL' }}
+    </span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Tipo</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+        <th class="valor-col">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- @for com track by id: sempre trackear por algo único evita re-render desnecessário,
+           igual o :key do v-for no Vue -->
+      @for (mov of movimentacaoService.movimentacoesOrdenadas(); track mov.id) {
+        <tr>
+          <td>{{ mov.data | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <span class="tipo-chip" [class.entrada]="mov.tipo === 'Entrada'" [class.saida]="mov.tipo === 'Saida'">
+              {{ mov.tipo === 'Entrada' ? '↓ Entrada' : '↑ Saída' }}
+            </span>
+          </td>
+          <td>{{ mov.categoria }}</td>
+          <td>{{ mov.descricao }}</td>
+          <td class="valor-col" [class.negativo]="mov.tipo === 'Saida'">
+            {{ mov.tipo === 'Saida' ? '-' : '' }}{{ mov.valor | currency:'BRL' }}
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="5" class="vazio">Nenhuma movimentação cadastrada ainda.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
