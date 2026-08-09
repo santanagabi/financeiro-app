@@ -3,6 +3,7 @@
 ## Tecnologias Utilizadas
 - **Framework**: Angular versão 18.2.0 (A versão mais moderna disponível).
 - **Linguagem**: TypeScript (TS). No universo Angular, ao contrário do Vue.js (onde é opcional), o desenvolvimento é 100% feito em TypeScript por padrão. Isso é muito valorizado em empresas grandes como o Itaú, pois garante que os dados tenham "tipos" definidos, prevenindo vários bugs de produção.
+- **Arquitetura (SPA)**: Esta aplicação é uma **SPA (Single Page Application)** renderizada no lado do cliente (Client-Side Rendering). Não estamos usando SSR (Server-Side Rendering) porque a persistência de dados do desafio foi feita via `localStorage` diretamente no navegador, o que impossibilita o uso de um servidor para pré-renderizar as telas.
 - **Gerenciamento de Estado**: Não usamos bibliotecas complexas como NGRX (que seria o "Redux" ou "Vuex" pesadão do Angular) porque seria "matar uma formiga com uma bazuca" para o tamanho desse projeto. Em vez disso, usamos os **Signals** nativos do próprio Angular 18, que são super simples de entender e funcionam de forma idêntica ao Pinia/Vuex que usamos no Vue.js.
 
 ## Como rodar

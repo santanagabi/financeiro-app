@@ -1,13 +1,13 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MovimentacaoService } from './services/movimentacao.service';
+import { Component, OnInit, signal } from "@angular/core";
+import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
+import { MovimentacaoService } from "./services/movimentacao.service";
 
 @Component({
-  selector: 'app-root',
-  standalone: true, // standalone = não precisa registrar em NgModule, parecido com SFC do Vue
+  selector: "app-root",
+  standalone: true, // standalone = não precisa registrar em NgModule
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  templateUrl: "./app.component.html",
+  styleUrl: "./app.component.scss",
 })
 export class AppComponent implements OnInit {
   menuOpen = signal(false);
@@ -20,6 +20,6 @@ export class AppComponent implements OnInit {
   }
 
   toggleMenu() {
-    this.menuOpen.update(v => !v);
+    this.menuOpen.update((v) => !v);
   }
 }
