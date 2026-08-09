@@ -65,10 +65,16 @@
   &.negativo { color: var(--color-danger); }
 }
 
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
+  min-width: 500px;
 }
 
 th {

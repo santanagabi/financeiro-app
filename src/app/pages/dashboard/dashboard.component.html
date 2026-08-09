@@ -35,38 +35,40 @@
     </span>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Tipo</th>
-        <th>Categoria</th>
-        <th>Descrição</th>
-        <th class="valor-col">Valor</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- @for com track by id: sempre trackear por algo único evita re-render desnecessário,
-           igual o :key do v-for no Vue -->
-      @for (mov of movimentacaoService.movimentacoesOrdenadas(); track mov.id) {
+  <div class="table-responsive">
+    <table>
+      <thead>
         <tr>
-          <td>{{ mov.data | date:'dd/MM/yyyy' }}</td>
-          <td>
-            <span class="tipo-chip" [class.entrada]="mov.tipo === 'Entrada'" [class.saida]="mov.tipo === 'Saida'">
-              {{ mov.tipo === 'Entrada' ? '↓ Entrada' : '↑ Saída' }}
-            </span>
-          </td>
-          <td>{{ mov.categoria }}</td>
-          <td>{{ mov.descricao }}</td>
-          <td class="valor-col" [class.negativo]="mov.tipo === 'Saida'">
-            {{ mov.tipo === 'Saida' ? '-' : '' }}{{ mov.valor | currency:'BRL' }}
-          </td>
+          <th>Data</th>
+          <th>Tipo</th>
+          <th>Categoria</th>
+          <th>Descrição</th>
+          <th class="valor-col">Valor</th>
         </tr>
-      } @empty {
-        <tr>
-          <td colspan="5" class="vazio">Nenhuma movimentação cadastrada ainda.</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <!-- @for com track by id: sempre trackear por algo único evita re-render desnecessário,
+             igual o :key do v-for no Vue -->
+        @for (mov of movimentacaoService.movimentacoesOrdenadas(); track mov.id) {
+          <tr>
+            <td>{{ mov.data | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="tipo-chip" [class.entrada]="mov.tipo === 'Entrada'" [class.saida]="mov.tipo === 'Saida'">
+                {{ mov.tipo === 'Entrada' ? '↓ Entrada' : '↑ Saída' }}
+              </span>
+            </td>
+            <td>{{ mov.categoria }}</td>
+            <td>{{ mov.descricao }}</td>
+            <td class="valor-col" [class.negativo]="mov.tipo === 'Saida'">
+              {{ mov.tipo === 'Saida' ? '-' : '' }}{{ mov.valor | currency:'BRL' }}
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="vazio">Nenhuma movimentação cadastrada ainda.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MovimentacaoService } from './services/movimentacao.service';
 
@@ -10,10 +10,16 @@ import { MovimentacaoService } from './services/movimentacao.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
+  menuOpen = signal(false);
+
   // OnInit é o equivalente ao onMounted() do Vue (roda quando o componente "monta")
   constructor(private movimentacaoService: MovimentacaoService) {}
 
   ngOnInit(): void {
     this.movimentacaoService.carregarDados();
+  }
+
+  toggleMenu() {
+    this.menuOpen.update(v => !v);
   }
 }
