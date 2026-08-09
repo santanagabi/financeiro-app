@@ -5,14 +5,14 @@ import { MovimentacaoService } from "./services/movimentacao.service";
 @Component({
   selector: "app-root",
   standalone: true, // standalone = não precisa registrar em NgModule
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive], // o que ele vai usar no html
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })
 export class AppComponent implements OnInit {
   menuOpen = signal(false);
 
-  // OnInit é o equivalente ao onMounted() do Vue (roda quando o componente "monta")
+  // O Constructor é onde você injeta serviços globais
   constructor(private movimentacaoService: MovimentacaoService) {}
 
   ngOnInit(): void {
