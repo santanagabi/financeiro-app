@@ -57,23 +57,8 @@ export class CadastroComponent {
     "Outros",
   ];
 
-  // Feedback de salvar (sucesso/erro)
   readonly salvando = signal(false);
 
-  /**
-   * --- CONCEITOS ARQUITETURAIS APLICADOS (Para a Entrevista) ---
-   *
-   * Por que usar Signal Forms (v21+) ao invés do clássico Reactive Forms (FormBuilder)?
-   *
-   * 1. Reatividade Síncrona e Unificada: Em Reactive Forms, os valores são Observables (RxJS),
-   *    exigindo gerenciamento de assinaturas (.subscribe). Com Signals, o estado do formulário
-   *    é 100% síncrono e integrado perfeitamente ao ChangeDetection.OnPush, sem vazamento de memória.
-   *
-   * 2. Type-Safety (Tipagem Forte) Baseado no Modelo: Ao invés de o formulário ditar o tipo
-   *    dos dados, a estrutura nasce a partir de um Model fortemente tipado (`this.model`).
-   *    O formulário apenas mapeia esse Model com regras de validação, impedindo erros de tipagem
-   *    comuns do FormBuilder (como valores "null" não esperados).
-   */
   protected readonly model = signal({
     data: "",
     tipo: "Entrada" as "Entrada" | "Saida",
