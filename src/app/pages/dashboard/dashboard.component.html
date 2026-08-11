@@ -7,7 +7,11 @@
     </mat-card-header>
     <mat-card-content>
       <div class="chart-wrap">
-        <canvas #doughnutCanvas></canvas>
+        <app-chart-wrapper 
+          [type]="'doughnut'" 
+          [data]="doughnutData()" 
+          [options]="doughnutOptions">
+        </app-chart-wrapper>
       </div>
       <div class="legend-summary">
         <div><span class="dot dot-success"></span> Entradas: {{ movimentacaoService.totalEntradas() | currency:'BRL' }}</div>
@@ -22,7 +26,11 @@
     </mat-card-header>
     <mat-card-content>
       <div class="chart-wrap">
-        <canvas #lineCanvas></canvas>
+        <app-chart-wrapper 
+          [type]="'line'" 
+          [data]="lineData()" 
+          [options]="lineOptions">
+        </app-chart-wrapper>
       </div>
     </mat-card-content>
   </mat-card>
@@ -33,7 +41,11 @@
     </mat-card-header>
     <mat-card-content>
       <div class="chart-wrap">
-        <canvas #barCanvas></canvas>
+        <app-chart-wrapper 
+          [type]="'bar'" 
+          [data]="barData()" 
+          [options]="barOptions">
+        </app-chart-wrapper>
       </div>
     </mat-card-content>
   </mat-card>
