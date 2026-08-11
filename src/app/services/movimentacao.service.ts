@@ -6,31 +6,27 @@ import { Movimentacao, NovaMovimentacao } from "../models/movimentacao.model";
 const STORAGE_KEY = "financeiro:movimentacoes";
 
 /**
- * @Injectable({ providedIn: 'root' }) é o equivalente a criar uma store
- * com defineStore(...) e ela já vir "global" — qualquer componente que injetar
- * esse service recebe a MESMA instância (singleton).
- *
- * Estratégia de armazenamento/leitura (para explicar na apresentação):
- * 1. Na inicialização, tenta ler do localStorage (dados já "persistidos" pelo usuário).
- * 2. Se não existir nada ainda, faz a carga inicial a partir de um JSON mock em /assets
- *    (simulando um "banco de dados" inicial, como pedido no case).
- * 3. Toda alteração (criar movimentação) atualiza o signal em memória E regrava
- *    o localStorage, simulando a gravação em arquivo JSON.
+ * --- CONCEITOS ARQUITETURAIS APLICADOS (Para a Entrevista) ---
+ * 
+ * 1. Single Responsibility (Responsabilidade Única): 
+ *    Este service é o único responsável pelas regras de negócio das movimentações
+ *    (carregar, validar, salvar, calcular totais e gerenciar a persistência). 
+ *    Os componentes apenas "assistem" os dados e reagem a eles, delegando toda a lógica para cá.
+ * 
+ * 2. Single Source of Truth (Fonte Única da Verdade):
+ *    O signal privado `_movimentacoes` é a única fonte verdadeira dos dados de todo o sistema.
+ *    Extrato, Gráficos e Saldos são apenas "derivados" (computed) dessa mesma fonte.
+ *    Por estar encapsulado e exposto como `.asReadonly()`, os componentes não conseguem
+ *    modificá-lo diretamente, garantindo que o estado da aplicação nunca fique inconsistente.
  */
 @Injectable({ providedIn: "root" })
 export class MovimentacaoService {
-  // signal é o equivalente direto ao ref() do Vue (estado reativo).
-  // Quando atualizamos ele com .set() ou .update(), qualquer tela que o use atualiza na hora!
   private readonly _movimentacoes = signal<Movimentacao[]>([]);
   private readonly _carregado = signal(false);
 
-  // Expomos como somente-leitura pra fora do service (ninguém de fora deveria
-  // conseguir sobrescrever a lista sem passar pelos métodos abaixo)
   readonly movimentacoes = this._movimentacoes.asReadonly();
   readonly carregado = this._carregado.asReadonly();
 
-  // computed() é IDÊNTICO ao computed() do Vue: deriva valor e recalcula sozinho
-  // sempre que o signal usado dentro dele mudar.
   readonly movimentacoesOrdenadas = computed(() =>
     [...this._movimentacoes()].sort((a, b) => (a.data < b.data ? 1 : -1)),
   );
@@ -47,16 +43,15 @@ export class MovimentacaoService {
       .reduce((soma, m) => soma + m.valor, 0),
   );
 
-  // Lógica de incremento e decremento do saldo:
-  // Entrada soma, Saída subtrai. Fica derivado (nunca guardamos "saldo" separado
-  // pra não correr risco de ele dessincronizar da lista de movimentações).
   readonly saldoAtual = computed(
     () => this.totalEntradas() - this.totalSaidas(),
   );
 
   private http = inject(HttpClient);
 
-  /** Carrega os dados (localStorage -> ou JSON mock, se for o 1º acesso) */
+  /**
+   * Carrega os dados persistidos no localStorage ou inicializa via JSON estático.
+   */
   async carregarDados(): Promise<void> {
     if (this._carregado()) return;
 
@@ -67,10 +62,6 @@ export class MovimentacaoService {
       return;
     }
 
-    // TODO: Explicar Observable na Entrevista!
-    // No Vue usamos Fetch/Axios (que retornam Promises). O HttpClient do Angular retorna um Observable (RxJS).
-    // Usamos o firstValueFrom() para converter esse Observable numa Promise e poder usar o await tranquilamente.
-    // Primeiro acesso: busca o JSON mock via HttpClient
     const iniciais = await firstValueFrom(
       this.http.get<Movimentacao[]>("assets/movimentacoes-iniciais.json"),
     );
@@ -79,7 +70,9 @@ export class MovimentacaoService {
     this._carregado.set(true);
   }
 
-  /** Cadastra uma nova movimentação, valida, persiste e retorna sucesso/erro */
+  /**
+   * Valida e adiciona uma nova movimentação ao estado.
+   */
   async salvar(
     nova: NovaMovimentacao,
   ): Promise<{ ok: boolean; mensagem: string }> {
@@ -88,7 +81,9 @@ export class MovimentacaoService {
 
     const movimentacao: Movimentacao = {
       ...nova,
-      id: crypto.randomUUID(),
+      id: typeof crypto !== 'undefined' && crypto.randomUUID 
+            ? crypto.randomUUID() 
+            : Math.random().toString(36).substring(2, 9),
     };
 
     this._movimentacoes.update((lista) => [...lista, movimentacao]);
@@ -97,7 +92,6 @@ export class MovimentacaoService {
     return { ok: true, mensagem: "Movimentação salva com sucesso!" };
   }
 
-  /** Regras de validação do formulário (Tela 1 do case) */
   private validar(nova: NovaMovimentacao): string | null {
     if (
       !nova.data ||
@@ -121,8 +115,8 @@ export class MovimentacaoService {
     return null;
   }
 
-  /** "Grava no JSON (mock)" -> na prática, persiste no localStorage do navegador */
   private persistir(): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this._movimentacoes()));
   }
 }
+

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { form, FormField, submit, required, min, minLength, maxLength } from '@angular/forms/signals';
 import { MovimentacaoService } from '../../services/movimentacao.service';
 import { CategoriaMovimentacao } from '../../models/movimentacao.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,17 +10,19 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-cadastro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule, MatButtonModule, MatCardModule, MatIconModule],
+  imports: [CommonModule, FormField, MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule, MatButtonModule, MatCardModule, MatIconModule, MatSnackBarModule],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CadastroComponent {
-  private fb = inject(FormBuilder);
+
   private movimentacaoService = inject(MovimentacaoService);
+  private snackBar = inject(MatSnackBar);
 
   readonly categorias: CategoriaMovimentacao[] = [
     'Salário',
@@ -33,61 +35,90 @@ export class CadastroComponent {
   ];
 
   // Feedback de salvar (sucesso/erro)
-  readonly mensagem = signal<{ tipo: 'sucesso' | 'erro'; texto: string } | null>(null);
   readonly salvando = signal(false);
 
-  // FormBuilder.group() monta o estado do form e suas validações.
-  readonly form = this.fb.group({
-    data: ['', [Validators.required]],
-    tipo: ['Entrada' as 'Entrada' | 'Saida', [Validators.required]],
-    categoria: ['', [Validators.required]],
-    descricao: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-    valor: [null as number | null, [Validators.required, Validators.min(0.01)]],
+  /**
+   * --- CONCEITOS ARQUITETURAIS APLICADOS (Para a Entrevista) ---
+   * 
+   * Por que usar Signal Forms (v21+) ao invés do clássico Reactive Forms (FormBuilder)?
+   * 
+   * 1. Reatividade Síncrona e Unificada: Em Reactive Forms, os valores são Observables (RxJS), 
+   *    exigindo gerenciamento de assinaturas (.subscribe). Com Signals, o estado do formulário 
+   *    é 100% síncrono e integrado perfeitamente ao ChangeDetection.OnPush, sem vazamento de memória.
+   * 
+   * 2. Type-Safety (Tipagem Forte) Baseado no Modelo: Ao invés de o formulário ditar o tipo
+   *    dos dados, a estrutura nasce a partir de um Model fortemente tipado (`this.model`).
+   *    O formulário apenas mapeia esse Model com regras de validação, impedindo erros de tipagem
+   *    comuns do FormBuilder (como valores "null" não esperados).
+   */
+  protected readonly model = signal({
+    data: '',
+    tipo: 'Entrada' as 'Entrada' | 'Saida',
+    categoria: '',
+    descricao: '',
+    valor: 0,
   });
 
-  // Getter de conveniência pra acessar os controles no template (form.controls.x é verboso)
-  get f() {
-    return this.form.controls;
-  }
+  readonly userForm = form(this.model, (schemaPath) => {
+    required(schemaPath.data);
+    required(schemaPath.tipo);
+    required(schemaPath.categoria);
+    required(schemaPath.descricao);
+    minLength(schemaPath.descricao, 5);
+    maxLength(schemaPath.descricao, 100);
+    required(schemaPath.valor);
+    min(schemaPath.valor, 0.01);
+  });
 
-  async onSubmit(): Promise<void> {
-    this.mensagem.set(null);
+  onSubmit(): void {
+    submit(this.userForm, async () => {
+      this.salvando.set(true);
+      const valores = this.model();
 
-    if (this.form.invalid) {
-      // markAllAsTouched força o Angular a mostrar os erros de todos os campos de uma vez
-      this.form.markAllAsTouched();
-      return;
-    }
+      try {
+        const resultado = await this.movimentacaoService.salvar({
+          data: valores.data,
+          tipo: valores.tipo,
+          categoria: valores.categoria as CategoriaMovimentacao,
+          descricao: valores.descricao,
+          valor: Number(valores.valor),
+        });
 
-    this.salvando.set(true);
-    const valores = this.form.getRawValue();
-
-    const resultado = await this.movimentacaoService.salvar({
-      data: valores.data!,
-      tipo: valores.tipo!,
-      categoria: valores.categoria as CategoriaMovimentacao,
-      descricao: valores.descricao!,
-      valor: Number(valores.valor),
+        if (resultado.ok) {
+          this.snackBar.open(resultado.mensagem, 'OK', { 
+            duration: 3000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top'
+          });
+          this.limpar();
+        } else {
+          this.snackBar.open(resultado.mensagem, 'Fechar', { 
+            duration: 5000,
+            horizontalPosition: 'end',
+            verticalPosition: 'top'
+          });
+        }
+      } catch (err: any) {
+        this.snackBar.open('Erro interno ao salvar: ' + (err.message || String(err)), 'Fechar', { 
+          duration: 5000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+      } finally {
+        this.salvando.set(false);
+      }
     });
-
-    this.salvando.set(false);
-    this.mensagem.set({
-      tipo: resultado.ok ? 'sucesso' : 'erro',
-      texto: resultado.mensagem,
-    });
-
-    if (resultado.ok) {
-      this.limpar();
-    }
   }
 
   limpar(): void {
-    this.form.reset({
+    this.model.set({
       data: '',
       tipo: 'Entrada',
       categoria: '',
       descricao: '',
-      valor: null,
+      valor: 0,
     });
+    // Reseta o estado do form (touched, dirty) para apagar os erros visuais
+    this.userForm().reset();
   }
 }

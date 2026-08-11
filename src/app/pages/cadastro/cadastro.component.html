@@ -4,48 +4,48 @@
   </mat-card-header>
 
   <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid-form">
+    <form (submit)="onSubmit(); $event.preventDefault()" class="grid-form">
       <mat-form-field appearance="outline">
-        <mat-label>Data da movimentação *</mat-label>
-        <input matInput type="date" formControlName="data" />
-        @if (f.data.invalid && f.data.touched) {
+        <mat-label>Data da movimentação</mat-label>
+        <input matInput type="date" [formField]="userForm.data" />
+        @if (userForm.data().invalid() && userForm.data().touched()) {
           <mat-error>Informe uma data válida.</mat-error>
         }
       </mat-form-field>
 
       <div class="radio-field">
-        <mat-label>Tipo *</mat-label>
-        <mat-radio-group formControlName="tipo" color="primary">
+        <mat-label>Tipo</mat-label>
+        <mat-radio-group [formField]="userForm.tipo" color="primary">
           <mat-radio-button value="Entrada">Entrada</mat-radio-button>
           <mat-radio-button value="Saida">Saída</mat-radio-button>
         </mat-radio-group>
       </div>
 
       <mat-form-field appearance="outline">
-        <mat-label>Categoria *</mat-label>
-        <mat-select formControlName="categoria">
+        <mat-label>Categoria</mat-label>
+        <mat-select [formField]="userForm.categoria">
           @for (cat of categorias; track cat) {
             <mat-option [value]="cat">{{ cat }}</mat-option>
           }
         </mat-select>
-        @if (f.categoria.invalid && f.categoria.touched) {
+        @if (userForm.categoria().invalid() && userForm.categoria().touched()) {
           <mat-error>Selecione uma categoria.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Descrição *</mat-label>
-        <input matInput formControlName="descricao" placeholder="Informe a descrição" />
-        @if (f.descricao.invalid && f.descricao.touched) {
+        <mat-label>Descrição</mat-label>
+        <input matInput [formField]="userForm.descricao" placeholder="Informe a descrição" />
+        @if (userForm.descricao().invalid() && userForm.descricao().touched()) {
           <mat-error>A descrição deve ter entre 5 e 100 caracteres.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Valor *</mat-label>
+        <mat-label>Valor</mat-label>
         <span matTextPrefix>R$&nbsp;</span>
-        <input matInput type="number" step="0.01" min="0" formControlName="valor" placeholder="0,00" />
-        @if (f.valor.invalid && f.valor.touched) {
+        <input matInput type="number" step="0.01" [formField]="userForm.valor" placeholder="0,00" />
+        @if (userForm.valor().invalid() && userForm.valor().touched()) {
           <mat-error>Informe um valor maior que zero.</mat-error>
         }
       </mat-form-field>
@@ -60,11 +60,6 @@
         </button>
       </div>
 
-      @if (mensagem(); as msg) {
-        <div class="full-width alert" [class.alert-success]="msg.tipo === 'sucesso'" [class.alert-error]="msg.tipo === 'erro'">
-          {{ msg.texto }}
-        </div>
-      }
     </form>
   </mat-card-content>
 </mat-card>
