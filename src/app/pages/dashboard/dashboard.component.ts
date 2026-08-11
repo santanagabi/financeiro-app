@@ -9,7 +9,7 @@ import {
 import { CommonModule, CurrencyPipe, DatePipe } from "@angular/common";
 import { Chart, ChartConfiguration, registerables } from "chart.js";
 import { MovimentacaoService } from "../../services/movimentacao.service";
-import { CategoriaMovimentacao } from "../../models/movimentacao.model";
+import { Movimentacao, CategoriaMovimentacao } from '../../interfaces/movimentacao';
 import { MatCardModule } from "@angular/material/card";
 import { MatTableModule } from "@angular/material/table";
 Chart.register(...registerables);
