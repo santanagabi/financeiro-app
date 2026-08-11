@@ -1,74 +1,91 @@
 <h2 class="page-title">Dashboard de Movimentações</h2>
 
 <div class="charts-row">
-  <div class="card chart-card">
-    <h3>Entradas x Saídas</h3>
-    <div class="chart-wrap">
-      <canvas #doughnutCanvas role="img" aria-label="Gráfico de donut mostrando entradas e saídas"></canvas>
-    </div>
-    <div class="legend-summary">
-      <div><span class="dot dot-success"></span> Entradas: {{ movimentacaoService.totalEntradas() | currency:'BRL' }}</div>
-      <div><span class="dot dot-danger"></span> Saídas: {{ movimentacaoService.totalSaidas() | currency:'BRL' }}</div>
-    </div>
-  </div>
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>Entradas x Saídas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-wrap">
+        <canvas #doughnutCanvas></canvas>
+      </div>
+      <div class="legend-summary">
+        <div><span class="dot dot-success"></span> Entradas: {{ movimentacaoService.totalEntradas() | currency:'BRL' }}</div>
+        <div><span class="dot dot-danger"></span> Saídas: {{ movimentacaoService.totalSaidas() | currency:'BRL' }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-  <div class="card chart-card">
-    <h3>Evolução do Saldo</h3>
-    <div class="chart-wrap">
-      <canvas #lineCanvas role="img" aria-label="Gráfico de linha mostrando a evolução do saldo"></canvas>
-    </div>
-  </div>
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>Evolução do Saldo</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-wrap">
+        <canvas #lineCanvas></canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-  <div class="card chart-card">
-    <h3>Gastos por Categoria</h3>
-    <div class="chart-wrap">
-      <canvas #barCanvas role="img" aria-label="Gráfico de barras mostrando os gastos por categoria"></canvas>
-    </div>
-  </div>
+  <mat-card class="chart-card">
+    <mat-card-header>
+      <mat-card-title>Gastos por Categoria</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="chart-wrap">
+        <canvas #barCanvas></canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
 
-<div class="card table-card">
-  <div class="table-header">
-    <h3>Extrato</h3>
+<mat-card class="table-card">
+  <mat-card-header class="table-header">
+    <mat-card-title>Extrato</mat-card-title>
     <span class="saldo" [class.negativo]="movimentacaoService.saldoAtual() < 0">
       Saldo atual: {{ movimentacaoService.saldoAtual() | currency:'BRL' }}
     </span>
-  </div>
+  </mat-card-header>
 
-  <div class="table-responsive">
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Data</th>
-          <th scope="col">Tipo</th>
-          <th scope="col">Categoria</th>
-          <th scope="col">Descrição</th>
-          <th class="valor-col" scope="col">Valor</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- @for com track by id: sempre trackear por algo único evita re-render desnecessário,
-             igual o :key do v-for no Vue -->
-        @for (mov of movimentacaoService.movimentacoesOrdenadas(); track mov.id) {
-          <tr>
-            <td>{{ mov.data | date:'dd/MM/yyyy' }}</td>
-            <td>
-              <span class="tipo-chip" [class.entrada]="mov.tipo === 'Entrada'" [class.saida]="mov.tipo === 'Saida'">
-                {{ mov.tipo === 'Entrada' ? '↓ Entrada' : '↑ Saída' }}
-              </span>
-            </td>
-            <td>{{ mov.categoria }}</td>
-            <td>{{ mov.descricao }}</td>
-            <td class="valor-col" [class.negativo]="mov.tipo === 'Saida'">
-              {{ mov.tipo === 'Saida' ? '-' : '' }}{{ mov.valor | currency:'BRL' }}
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="vazio">Nenhuma movimentação cadastrada ainda.</td>
-          </tr>
-        }
-      </tbody>
+  <mat-card-content>
+    <table mat-table [dataSource]="movimentacaoService.movimentacoesOrdenadas()" class="mat-elevation-z0">
+      
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let mov"> {{ mov.data | date:'dd/MM/yyyy' }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef> Tipo </th>
+        <td mat-cell *matCellDef="let mov">
+          <span class="tipo-chip" [class.entrada]="mov.tipo === 'Entrada'" [class.saida]="mov.tipo === 'Saida'">
+            {{ mov.tipo === 'Entrada' ? '↓ Entrada' : '↑ Saída' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="categoria">
+        <th mat-header-cell *matHeaderCellDef> Categoria </th>
+        <td mat-cell *matCellDef="let mov"> {{ mov.categoria }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef> Descrição </th>
+        <td mat-cell *matCellDef="let mov"> {{ mov.descricao }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="valor">
+        <th mat-header-cell *matHeaderCellDef class="valor-col"> Valor </th>
+        <td mat-cell *matCellDef="let mov" class="valor-col" [class.negativo]="mov.tipo === 'Saida'">
+          {{ mov.tipo === 'Saida' ? '-' : '' }}{{ mov.valor | currency:'BRL' }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-  </div>
-</div>
+    @if (movimentacaoService.movimentacoesOrdenadas().length === 0) {
+      <div class="vazio">Nenhuma movimentação cadastrada ainda.</div>
+    }
+  </mat-card-content>
+</mat-card>

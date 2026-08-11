@@ -11,18 +11,13 @@
 }
 
 .chart-card {
-  padding: 18px 20px;
-
-  h3 {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    margin-bottom: 10px;
-  }
+  padding: 0;
 }
 
 .chart-wrap {
   position: relative;
   height: 180px;
+  margin-top: 16px;
 }
 
 .legend-summary {
@@ -40,57 +35,26 @@
   border-radius: 50%;
   margin-right: 6px;
 
-  &.dot-success { background: var(--color-success); }
-  &.dot-danger { background: var(--color-danger); }
-}
-
-.table-card {
-  padding: 18px 20px;
+  &.dot-success { background: #16a34a; }
+  &.dot-danger { background: #dc2626; }
 }
 
 .table-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
-
-  h3 { font-size: 0.95rem; }
 }
 
 .saldo {
   font-weight: 600;
-  color: var(--color-success);
+  color: #16a34a;
   font-size: 0.9rem;
 
-  &.negativo { color: var(--color-danger); }
-}
-
-.table-responsive {
-  width: 100%;
-  overflow-x: auto;
+  &.negativo { color: #dc2626; }
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-  min-width: 500px;
-}
-
-th {
-  text-align: left;
-  color: var(--color-text-muted);
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 10px 8px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-td {
-  padding: 12px 8px;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .tipo-chip {
@@ -99,20 +63,25 @@ td {
   font-size: 0.78rem;
   font-weight: 500;
 
-  &.entrada { background: var(--color-success-bg); color: var(--color-success); }
-  &.saida { background: var(--color-danger-bg); color: var(--color-danger); }
+  &.entrada { background: #e9f9ef; color: #16a34a; }
+  &.saida { background: #fdecec; color: #dc2626; }
 }
 
 .valor-col {
   text-align: right;
   font-variant-numeric: tabular-nums;
+  padding-right: 24px !important;
 
-  &.negativo { color: var(--color-danger); }
+  &.negativo { color: #dc2626; }
+}
+
+th.valor-col {
+  text-align: right;
 }
 
 .vazio {
   text-align: center;
-  color: var(--color-text-muted);
+  color: rgba(0,0,0,0.6);
   padding: 24px;
 }
 

@@ -3,11 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovimentacaoService } from '../../services/movimentacao.service';
 import { CategoriaMovimentacao } from '../../models/movimentacao.model';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-cadastro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.scss',
 })
@@ -25,12 +31,11 @@ export class CadastroComponent {
     'Outros',
   ];
 
-  // Feedback de salvar (sucesso/erro) - equivalente a um ref<string|null>() no Vue
+  // Feedback de salvar (sucesso/erro)
   readonly mensagem = signal<{ tipo: 'sucesso' | 'erro'; texto: string } | null>(null);
   readonly salvando = signal(false);
 
-  // FormBuilder.group() monta o "estado" do form. Cada campo tem validators,
-  // que é o equivalente a regras que você faria manualmente com watch() no Vue.
+  // FormBuilder.group() monta o estado do form e suas validações.
   readonly form = this.fb.group({
     data: ['', [Validators.required]],
     tipo: ['Entrada' as 'Entrada' | 'Saida', [Validators.required]],

@@ -1,88 +1,70 @@
-<div class="card form-card">
-  <h2>Cadastro de Movimentações Bancárias</h2>
+<mat-card class="form-card">
+  <mat-card-header>
+    <mat-card-title>Cadastro de Movimentações Bancárias</mat-card-title>
+  </mat-card-header>
 
-  <!-- [formGroup] conecta o <form> ao objeto `form` criado no .ts -->
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid">
-
-    <div class="field">
-      <label for="data">Data da movimentação *</label>
-      <input id="data" type="date" formControlName="data" 
-             [attr.aria-invalid]="f.data.invalid && f.data.touched ? 'true' : null"
-             [attr.aria-describedby]="f.data.invalid && f.data.touched ? 'data-error' : null" />
-      @if (f.data.invalid && f.data.touched) {
-        <small class="error" id="data-error" role="alert">Informe uma data válida.</small>
-      }
-    </div>
-
-    <div class="field" role="group" aria-labelledby="tipo-label">
-      <label id="tipo-label">Tipo *</label>
-      <div class="radio-group">
-        <label class="radio">
-          <input type="radio" formControlName="tipo" value="Entrada" /> Entrada
-        </label>
-        <label class="radio">
-          <input type="radio" formControlName="tipo" value="Saida" /> Saída
-        </label>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="categoria">Categoria *</label>
-      <select id="categoria" formControlName="categoria"
-              [attr.aria-invalid]="f.categoria.invalid && f.categoria.touched ? 'true' : null"
-              [attr.aria-describedby]="f.categoria.invalid && f.categoria.touched ? 'categoria-error' : null">
-        <option value="" disabled>Selecione...</option>
-        <!-- @for é o novo control-flow, equivalente ao v-for. "track" é obrigatório -->
-        @for (cat of categorias; track cat) {
-          <option [value]="cat">{{ cat }}</option>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Data da movimentação *</mat-label>
+        <input matInput type="date" formControlName="data" />
+        @if (f.data.invalid && f.data.touched) {
+          <mat-error>Informe uma data válida.</mat-error>
         }
-      </select>
-      @if (f.categoria.invalid && f.categoria.touched) {
-        <small class="error" id="categoria-error" role="alert">Selecione uma categoria.</small>
-      }
-    </div>
+      </mat-form-field>
 
-    <div class="field full">
-      <label for="descricao">Descrição *</label>
-      <input
-        id="descricao"
-        type="text"
-        formControlName="descricao"
-        placeholder="Informe a descrição da movimentação"
-        [attr.aria-invalid]="f.descricao.invalid && f.descricao.touched ? 'true' : null"
-        [attr.aria-describedby]="f.descricao.invalid && f.descricao.touched ? 'descricao-error' : null"
-      />
-      @if (f.descricao.invalid && f.descricao.touched) {
-        <small class="error" id="descricao-error" role="alert">A descrição deve ter entre 5 e 100 caracteres.</small>
-      }
-    </div>
-
-    <div class="field">
-      <label for="valor">Valor *</label>
-      <div class="input-money">
-        <span>R$</span>
-        <input id="valor" type="number" step="0.01" min="0" formControlName="valor" placeholder="0,00"
-               [attr.aria-invalid]="f.valor.invalid && f.valor.touched ? 'true' : null"
-               [attr.aria-describedby]="f.valor.invalid && f.valor.touched ? 'valor-error' : null" />
+      <div class="radio-field">
+        <mat-label>Tipo *</mat-label>
+        <mat-radio-group formControlName="tipo" color="primary">
+          <mat-radio-button value="Entrada">Entrada</mat-radio-button>
+          <mat-radio-button value="Saida">Saída</mat-radio-button>
+        </mat-radio-group>
       </div>
-      @if (f.valor.invalid && f.valor.touched) {
-        <small class="error" id="valor-error" role="alert">Informe um valor maior que zero.</small>
-      }
-    </div>
 
-    <div class="actions full">
-      <button type="submit" class="btn-primary" [disabled]="salvando()">
-        💾 {{ salvando() ? 'Salvando...' : 'Salvar movimentação' }}
-      </button>
-      <button type="button" class="btn-secondary" (click)="limpar()">
-        🧹 Limpar
-      </button>
-    </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria *</mat-label>
+        <mat-select formControlName="categoria">
+          @for (cat of categorias; track cat) {
+            <mat-option [value]="cat">{{ cat }}</mat-option>
+          }
+        </mat-select>
+        @if (f.categoria.invalid && f.categoria.touched) {
+          <mat-error>Selecione uma categoria.</mat-error>
+        }
+      </mat-form-field>
 
-    @if (mensagem(); as msg) {
-      <div class="full alert" [class.alert-success]="msg.tipo === 'sucesso'" [class.alert-error]="msg.tipo === 'erro'" role="alert" aria-live="assertive">
-        {{ msg.texto }}
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descrição *</mat-label>
+        <input matInput formControlName="descricao" placeholder="Informe a descrição" />
+        @if (f.descricao.invalid && f.descricao.touched) {
+          <mat-error>A descrição deve ter entre 5 e 100 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Valor *</mat-label>
+        <span matTextPrefix>R$&nbsp;</span>
+        <input matInput type="number" step="0.01" min="0" formControlName="valor" placeholder="0,00" />
+        @if (f.valor.invalid && f.valor.touched) {
+          <mat-error>Informe um valor maior que zero.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="actions full-width">
+        <button mat-flat-button color="primary" type="submit" [disabled]="salvando()">
+          <mat-icon>save</mat-icon>
+          {{ salvando() ? 'Salvando...' : 'Salvar movimentação' }}
+        </button>
+        <button mat-stroked-button type="button" (click)="limpar()">
+          <mat-icon>clear</mat-icon> Limpar
+        </button>
       </div>
-    }
-  </form>
-</div>
+
+      @if (mensagem(); as msg) {
+        <div class="full-width alert" [class.alert-success]="msg.tipo === 'sucesso'" [class.alert-error]="msg.tipo === 'erro'">
+          {{ msg.texto }}
+        </div>
+      }
+    </form>
+  </mat-card-content>
+</mat-card>
