@@ -1,9 +1,10 @@
 import {
-  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  ViewChild,
+  viewChild,
   effect,
+  inject
 } from "@angular/core";
 import { CommonModule, CurrencyPipe, DatePipe } from "@angular/common";
 import { Chart, ChartConfiguration, registerables } from "chart.js";
@@ -25,8 +26,9 @@ Chart.register(...registerables);
   ],
   templateUrl: "./dashboard.component.html",
   styleUrl: "./dashboard.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent {
   displayedColumns: string[] = [
     "data",
     "tipo",
@@ -34,28 +36,22 @@ export class DashboardComponent implements AfterViewInit {
     "descricao",
     "valor",
   ];
-  @ViewChild("doughnutCanvas") doughnutCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild("lineCanvas") lineCanvas!: ElementRef<HTMLCanvasElement>;
-  @ViewChild("barCanvas") barCanvas!: ElementRef<HTMLCanvasElement>;
+  doughnutCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>("doughnutCanvas");
+  lineCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>("lineCanvas");
+  barCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>("barCanvas");
 
   private doughnutChart?: Chart;
   private lineChart?: Chart;
   private barChart?: Chart;
-  private viewPronta = false;
 
-  constructor(public movimentacaoService: MovimentacaoService) {
+  public movimentacaoService = inject(MovimentacaoService);
+
+  constructor() {
     // Reage às movimentações e redesenha os gráficos.
     effect(() => {
       const dados = this.movimentacaoService.movimentacoesOrdenadas();
-      if (this.viewPronta) {
-        this.atualizarGraficos(dados.length ? dados : []);
-      }
+      this.atualizarGraficos(dados.length ? dados : []);
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.viewPronta = true;
-    this.atualizarGraficos(this.movimentacaoService.movimentacoesOrdenadas());
   }
 
   private atualizarGraficos(
@@ -92,7 +88,7 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     this.doughnutChart?.destroy();
-    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, config);
+    this.doughnutChart = new Chart(this.doughnutCanvas().nativeElement, config);
   }
 
   /** Gráfico 2: Evolução do saldo (linha), calculado como saldo acumulado no tempo */
@@ -132,7 +128,7 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     this.lineChart?.destroy();
-    this.lineChart = new Chart(this.lineCanvas.nativeElement, config);
+    this.lineChart = new Chart(this.lineCanvas().nativeElement, config);
   }
 
   /** Gráfico 3: Gastos por categoria (barras) - só considera Saídas */
@@ -172,7 +168,7 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     this.barChart?.destroy();
-    this.barChart = new Chart(this.barCanvas.nativeElement, config);
+    this.barChart = new Chart(this.barCanvas().nativeElement, config);
   }
 
   private formatarDataCurta(iso: string): string {

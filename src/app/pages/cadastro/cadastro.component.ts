@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MovimentacaoService } from '../../services/movimentacao.service';
@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatRadioModule, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CadastroComponent {
   private fb = inject(FormBuilder);

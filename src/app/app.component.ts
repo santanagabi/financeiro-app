@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { MovimentacaoService } from "./services/movimentacao.service";
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -13,11 +13,12 @@ import { MatListModule } from '@angular/material/list';
   imports: [RouterOutlet, RouterLink, RouterLinkActive, MatSidenavModule, MatToolbarModule, MatIconModule, MatButtonModule, MatListModule],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   menuOpen = signal(false);
 
-  constructor(private movimentacaoService: MovimentacaoService) {}
+  private movimentacaoService = inject(MovimentacaoService);
 
   ngOnInit(): void {
     this.movimentacaoService.carregarDados();

@@ -1,7 +1,5 @@
 import { Routes } from "@angular/router";
 
-// A diferença é o "loadComponent" -> isso faz lazy loading automático (code splitting),
-// ou seja, o código da tela só é baixado quando o usuário navega até ela.
 export const routes: Routes = [
   { path: "", redirectTo: "dashboard", pathMatch: "full" },
   {

@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from "@angular/core";
+import { Injectable, computed, signal, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { Movimentacao, NovaMovimentacao } from "../models/movimentacao.model";
@@ -54,7 +54,7 @@ export class MovimentacaoService {
     () => this.totalEntradas() - this.totalSaidas(),
   );
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   /** Carrega os dados (localStorage -> ou JSON mock, se for o 1º acesso) */
   async carregarDados(): Promise<void> {
