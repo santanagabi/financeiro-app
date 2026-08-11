@@ -5,7 +5,7 @@ export const routes: Routes = [
   {
     path: "dashboard",
     loadComponent: () =>
-      import("./pages/dashboard/dashboard.component").then(
+      import("./features/dashboard/dashboard.component").then(
         (m) => m.DashboardComponent,
       ),
     title: "Dashboard | Financeiro",
@@ -13,7 +13,7 @@ export const routes: Routes = [
   {
     path: "cadastro",
     loadComponent: () =>
-      import("./pages/cadastro/cadastro.component").then(
+      import("./features/movimentacoes/cadastro/cadastro.component").then(
         (m) => m.CadastroComponent,
       ),
     title: "Nova Movimentação | Financeiro",

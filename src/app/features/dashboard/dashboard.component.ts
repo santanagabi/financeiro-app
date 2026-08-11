@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from "@angular/core";
 import { CommonModule, CurrencyPipe, DatePipe } from "@angular/common";
 import { ChartConfiguration } from "chart.js";
-import { MovimentacaoService } from "../../services/movimentacao.service";
-import { Movimentacao, CategoriaMovimentacao } from '../../interfaces/movimentacao';
+import { MovimentacaoService } from "../movimentacoes/services/movimentacao.service";
+import { Movimentacao, CategoriaMovimentacao } from '../movimentacoes/interfaces/movimentacao';
 import { MatCardModule } from "@angular/material/card";
 import { MatTableModule } from "@angular/material/table";
-import { ChartWrapper } from "../../components/chart-wrapper/chart-wrapper";
+import { ChartWrapper } from "../../shared/ui/chart-wrapper/chart-wrapper";
 
 @Component({
   selector: "app-dashboard",

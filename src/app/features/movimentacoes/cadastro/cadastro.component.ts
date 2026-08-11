@@ -14,8 +14,8 @@ import {
   minLength,
   maxLength,
 } from "@angular/forms/signals";
-import { MovimentacaoService } from "../../services/movimentacao.service";
-import { CategoriaMovimentacao } from "../../interfaces/movimentacao";
+import { MovimentacaoService } from "../services/movimentacao.service";
+import { CategoriaMovimentacao } from "../interfaces/movimentacao";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
