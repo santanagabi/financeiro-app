@@ -97,6 +97,7 @@ export class CadastroComponent {
             duration: 3000,
             horizontalPosition: "end",
             verticalPosition: "top",
+            panelClass: ['success-snackbar']
           });
           this.limpar();
         } else {
@@ -104,6 +105,7 @@ export class CadastroComponent {
             duration: 5000,
             horizontalPosition: "end",
             verticalPosition: "top",
+            panelClass: ['error-snackbar']
           });
         }
       } catch (err: any) {
@@ -114,6 +116,7 @@ export class CadastroComponent {
             duration: 5000,
             horizontalPosition: "end",
             verticalPosition: "top",
+            panelClass: ['error-snackbar']
           },
         );
       } finally {

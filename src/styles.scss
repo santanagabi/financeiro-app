@@ -55,3 +55,21 @@ input, select {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
 }
+
+.success-snackbar {
+  --mdc-snackbar-container-color: var(--color-success);
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+  .mat-mdc-snack-bar-actions .mat-mdc-button:not(:disabled) {
+    color: #fff;
+  }
+}
+
+.error-snackbar {
+  --mdc-snackbar-container-color: var(--color-danger);
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+  .mat-mdc-snack-bar-actions .mat-mdc-button:not(:disabled) {
+    color: #fff;
+  }
+}

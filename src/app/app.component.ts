@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal, inject } from "@angular/core";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
-import { MovimentacaoService } from "./services/movimentacao.service";
+import { MovimentacaoService } from "./features/movimentacoes/services/movimentacao.service";
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
