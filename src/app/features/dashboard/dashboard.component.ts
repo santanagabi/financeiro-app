@@ -35,7 +35,7 @@ export class DashboardComponent {
       borderWidth: 0,
     }],
   }));
-  doughnutOptions: ChartConfiguration<'doughnut'>['options'] = {
+  doughnutOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     cutout: "68%",
@@ -64,11 +64,11 @@ export class DashboardComponent {
       }],
     };
   });
-  lineOptions: ChartConfiguration<'line'>['options'] = {
+  lineOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: { legend: { display: false } },
-    scales: { y: { ticks: { callback: (v) => "R$ " + v } } },
+    scales: { y: { ticks: { callback: (v: any) => "R$ " + v } } },
   };
 
   // Gráfico 3: Barras (Gastos por Categoria)
@@ -90,11 +90,11 @@ export class DashboardComponent {
       }],
     };
   });
-  barOptions: ChartConfiguration<'bar'>['options'] = {
+  barOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: { legend: { display: false } },
-    scales: { y: { ticks: { callback: (v) => "R$ " + v } } },
+    scales: { y: { ticks: { callback: (v: any) => "R$ " + v } } },
   };
 
   private formatarDataCurta(iso: string): string {

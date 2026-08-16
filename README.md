@@ -1,8 +1,14 @@
 # Financeiro App (Angular)
+<div align="center">
+  <video src="docs/assets/financeiro.mp4" controls="controls" muted="muted" style="max-height:640px; min-height: 200px; width: 100%; max-width: 800px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ccc;">
+  </video>
+</div>
 
 ## Tecnologias Utilizadas
 - **Framework**: Angular versão 18.2.0 (A versão mais moderna disponível).
 - **Linguagem**: TypeScript (TS). No universo Angular, ao contrário do Vue.js (onde é opcional), o desenvolvimento é 100% feito em TypeScript por padrão. Isso é muito valorizado no mercado, pois garante que os dados tenham "tipos" definidos, prevenindo vários bugs de produção.
+- **Componentes Visuais**: **Angular Material**, a biblioteca oficial de design do Google para o Angular, garantindo acessibilidade, responsividade e um visual moderno para os botões, menus, tabelas e formulários.
+- **Visualização de Dados**: **Chart.js**, utilizado para renderizar os gráficos de alta performance no Dashboard (Gráficos de Rosca, Linha e Barras).
 - **Arquitetura (SPA)**: Esta aplicação é uma **SPA (Single Page Application)** renderizada no lado do cliente (Client-Side Rendering). Não estamos usando SSR (Server-Side Rendering) porque a persistência de dados da aplicação foi feita via `localStorage` diretamente no navegador, o que impossibilita o uso de um servidor para pré-renderizar as telas.
 - **Gerenciamento de Estado**: Não usamos bibliotecas complexas como NGRX (que seria o "Redux" ou "Vuex" pesadão do Angular) porque seria "matar uma formiga com uma bazuca" para o tamanho desse projeto. Em vez disso, usamos os **Signals** nativos do próprio Angular 18, que são super simples de entender e funcionam de forma idêntica ao Pinia/Vuex que usamos no Vue.js.
 
